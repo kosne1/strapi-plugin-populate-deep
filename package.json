@@ -1,6 +1,6 @@
 {
   "name": "@kosne1/strapi-plugin-populate-deep",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Strapi plugin that populates nested content.",
   "strapi": {
     "name": "strapi-plugin-populate-deep",
@@ -9,11 +9,11 @@
   },
   "dependencies": {},
   "author": {
-    "name": "Christofer Jungberg"
+    "name": "Nikolay Ananin"
   },
   "maintainers": [
     {
-      "name": "Christofer Jungberg"
+      "name": "Kirill Tsarevsky"
     }
   ],
   "repository": {

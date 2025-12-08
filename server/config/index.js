@@ -5,6 +5,7 @@ module.exports = {
     defaultDepth: 5,
     skipCreatorFields: true,
     nestedDynamiczone: true,
+    componentPopulateMap: {},
   },
   validator: () => { },
 };

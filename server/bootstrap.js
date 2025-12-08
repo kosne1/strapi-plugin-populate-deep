@@ -1,7 +1,9 @@
 'use strict';
 const { getFullPopulateObject } = require('./helpers')
+const { dynamicPopulate } = require('./helpers/dynamic-populate');
 
 module.exports = ({ strapi }) => {
+  const buildDynamicPopulate = dynamicPopulate(strapi);
   // Subscribe to the lifecycles that we are intrested in.
   strapi.db.lifecycles.subscribe((event) => {
     if (event.action === 'beforeFindMany' || event.action === 'beforeFindOne') {
@@ -12,6 +14,12 @@ module.exports = ({ strapi }) => {
         const depth = populate[1] ?? defaultDepth
         const modelObject = getFullPopulateObject(event.model.uid, depth, [], []);
         event.params.populate = modelObject.populate
+      }
+      else if (populate && populate[0] === 'dynamic') {
+        const components = populate.slice(1);
+        const dynamicPopulate = buildDynamicPopulate(components);
+        
+        event.params.populate = dynamicPopulate;
       }
     }
   });
