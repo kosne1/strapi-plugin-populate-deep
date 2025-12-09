@@ -4,7 +4,7 @@ const { dynamicPopulate } = require('./helpers/dynamic-populate');
 
 module.exports = ({ strapi }) => {
   const buildDynamicPopulate = dynamicPopulate(strapi);
-  // Subscribe to the lifecycles that we are intrested in.
+  // Subscribe to the lifecycles that we are interested in.
   strapi.db.lifecycles.subscribe((event) => {
     if (event.action === 'beforeFindMany' || event.action === 'beforeFindOne') {
       const populate = event.params?.populate;
@@ -17,7 +17,15 @@ module.exports = ({ strapi }) => {
       }
       else if (populate === 'dynamiczone' || (Array.isArray(populate) && populate[0] === 'dynamiczone')) {
         const dynamicPop = buildDynamicPopulate();
-        event.params.populate = dynamicPop;
+        // Если componentPopulateMap не задан - используем deep populate
+        if (!dynamicPop || Object.keys(dynamicPop).length === 0) {
+          const depth = Array.isArray(populate) && populate[1] ? populate[1] : defaultDepth;
+          const modelObject = getFullPopulateObject(event.model.uid, depth, [], []);
+          event.params.populate = modelObject.populate
+        }
+        else {
+          event.params.populate = dynamicPop;
+        }
       }
     }
   });
