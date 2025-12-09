@@ -1,21 +1,16 @@
 'use strict';
 
 function dynamicPopulate(strapi) {
-  return function buildDynamicPopulate(components) {
+  return function buildDynamicPopulate() {
     // Получаем componentPopulateMap из конфига плагина
     const componentPopulateMap = strapi
       .plugin('strapi-plugin-populate-deep')
       ?.config('componentPopulateMap') || {};
 
-    if (!components || components.length === 0) {
-      return { blocks: { populate: '*' } };
-    }
     const onPopulate = {};
-
-    components.forEach((componentName) => {
-      if (componentPopulateMap[componentName]) {
-        onPopulate[componentName] = componentPopulateMap[componentName];
-      }
+    
+    Object.keys(componentPopulateMap).forEach((componentName) => {
+      onPopulate[componentName] = componentPopulateMap[componentName];
     });
 
     if (Object.keys(onPopulate).length === 0) {
