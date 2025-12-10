@@ -1,17 +1,17 @@
 'use strict';
 
 function dynamicPopulate(strapi) {
-  return function buildDynamicPopulate() {
+  return function buildDynamicPopulate(modelUid) {
     // Получаем componentPopulateMap из конфига плагина
     const componentPopulateMap = strapi
     .plugin('strapi-plugin-populate-deep')
     ?.config('componentPopulateMap');
 
-  if (!componentPopulateMap || Object.keys(componentPopulateMap).length === 0) {
-    return null;
-  }
+    if (!componentPopulateMap || Object.keys(componentPopulateMap).length === 0) {
+      return null;
+    }
 
-    return {
+    const result = {
       blocks: {
         on: componentPopulateMap
       },
@@ -24,6 +24,16 @@ function dynamicPopulate(strapi) {
         }
       }
     };
+
+    if (modelUid === 'api::product.product') {
+      result.success_stories = {
+        populate: {
+          id: true
+        }
+      };
+    }
+
+    return result;
   };
 }
 

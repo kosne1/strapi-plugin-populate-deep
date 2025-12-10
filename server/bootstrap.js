@@ -16,7 +16,7 @@ module.exports = ({ strapi }) => {
         event.params.populate = modelObject.populate
       }
       else if (populate === 'dynamiczone' || (Array.isArray(populate) && populate[0] === 'dynamiczone')) {
-        const dynamicPop = buildDynamicPopulate();
+        const dynamicPop = buildDynamicPopulate(event.model.uid);
         // Если componentPopulateMap не задан - используем deep populate
         if (!dynamicPop || Object.keys(dynamicPop).length === 0) {
           const depth = Array.isArray(populate) && populate[1] ? populate[1] : defaultDepth;
