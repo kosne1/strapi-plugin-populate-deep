@@ -2,16 +2,26 @@
 
 function dynamicPopulate(strapi) {
   return function buildDynamicPopulate(modelUid) {
-    // Получаем componentPopulateMap из конфига плагина
+    // Получаем modelPopulateMap из конфига плагина
+    const modelPopulateMap = strapi
+      .plugin('strapi-plugin-populate-deep')
+      ?.config('modelPopulateMap');
+
+    if (modelPopulateMap && modelPopulateMap[modelUid]) {
+      return modelPopulateMap[modelUid];
+    }
+
+    // используем componentPopulateMap (обратная совместимость)
     const componentPopulateMap = strapi
-    .plugin('strapi-plugin-populate-deep')
-    ?.config('componentPopulateMap');
+      .plugin('strapi-plugin-populate-deep')
+      ?.config('componentPopulateMap');
 
     if (!componentPopulateMap || Object.keys(componentPopulateMap).length === 0) {
       return null;
     }
 
-    const result = {
+    // Дефолтная структура
+    return {
       blocks: {
         on: componentPopulateMap
       },
@@ -24,16 +34,6 @@ function dynamicPopulate(strapi) {
         }
       }
     };
-
-    if (modelUid === 'api::product.product') {
-      result.success_stories = {
-        populate: {
-          id: true
-        }
-      };
-    }
-
-    return result;
   };
 }
 
