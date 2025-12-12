@@ -20,7 +20,7 @@ module.exports = ({ strapi }) => {
       }
       // populate=dynamiczone — для страниц с blocks или content (ищет в modelPopulateMap и contentBlocksPopulateMap)
       else if (populate === 'dynamiczone' || (Array.isArray(populate) && populate[0] === 'dynamiczone')) {
-        const dynamicPop = buildDynamicPopulate(modelUid, collectionName);
+        const dynamicPop = buildDynamicPopulate(collectionName);
         
         if (dynamicPop && Object.keys(dynamicPop).length > 0) {
           event.params.populate = dynamicPop;
